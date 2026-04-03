@@ -1,6 +1,7 @@
 package com.example.ex11042;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -16,6 +17,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author David Yusupov <dy3722@bs.amalnet.k12.il>
  * @version 1.0
@@ -26,6 +30,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Intent siCred, siAddExpense, siSearch;
     private int clickPos;
     private ListView lvExpenses;
+    private List<String> expensesList;
+    private SQLiteDatabase db;
+    private HelperDB hlp;
 
     /**
      * Initializes the activity and sets up the UI components.
@@ -41,6 +48,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        hlp = new HelperDB(this);
+        db = hlp.getWritableDatabase();
+        db.close();
+
         siCred = new Intent(this, CreditsActivity.class);
         siAddExpense = new Intent(this, AddExpenseActivity.class);
         siSearch = new Intent(this, SearchActivity.class);
@@ -48,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         lvExpenses = findViewById(R.id.lvExpenses);
         lvExpenses.setOnItemLongClickListener(this);
         lvExpenses.setOnCreateContextMenuListener(this);
+
+        expensesList = new ArrayList<>();
     }
 
     /**

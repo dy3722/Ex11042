@@ -18,6 +18,17 @@
         android:textSize="30dp"
         android:textStyle="bold|italic" />
 
+    <TextView
+        android:id="@+id/tvAmount"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3.5"
+        android:gravity="center"
+        android:text="The amount of your expenses:\n0 ₪"
+        android:textColor="#90492C"
+        android:textSize="40dp"
+        android:textStyle="bold" />
+
     <ListView
         android:id="@+id/lvExpenses"
         android:layout_width="match_parent"
