@@ -19,9 +19,9 @@ public class HelperDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         strCreate = "CREATE TABLE " + Expenses.TABLE_EXPENSES;
         strCreate += " (" + Expenses.KEY_ID + " INTEGER PRIMARY KEY,";
-        strCreate += " " + Expenses.DESCRIPTION + " TEXT";
-        strCreate += " " + Expenses.AMOUNT + " REAL";
-        strCreate += " " + Expenses.CATEGORY + " TEXT";
+        strCreate += " " + Expenses.DESCRIPTION + " TEXT,";
+        strCreate += " " + Expenses.AMOUNT + " REAL,";
+        strCreate += " " + Expenses.CATEGORY + " TEXT,";
         strCreate += " " + Expenses.DATE + " TEXT";
         strCreate += ");";
         sqLiteDatabase.execSQL(strCreate);

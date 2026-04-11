@@ -18,11 +18,21 @@
         android:textSize="30dp"
         android:textStyle="bold|italic" />
 
+    <TextView
+        android:id="@+id/tvInfoToUser"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:gravity="center"
+        android:textColor="#A60000"
+        android:textSize="20dp"
+        android:textStyle="bold|italic" />
+
     <EditText
         android:id="@+id/etAmount"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="1.5"
         android:ems="10"
         android:gravity="center"
         android:hint="the amount of the expense [₪]"
@@ -31,11 +41,28 @@
         android:textSize="30dp"
         android:textStyle="italic" />
 
-    <Spinner
-        android:id="@+id/spCategory"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Category:"
+            android:textColor="#3A54C7"
+            android:textSize="25dp"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spCategory"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

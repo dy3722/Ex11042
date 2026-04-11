@@ -1,13 +1,21 @@
 package com.example.ex11042;
 
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -16,20 +24,51 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class AddExpenseActivity extends AppCompatActivity {
+import java.util.Calendar;
+
+public class AddExpenseActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private Intent siCred, siSearch;
-    private String strDate;
-    private TextView tvShowDate;
+    private String strDate, strSelectedCategory;
+    private TextView tvShowDate, tvInfoToUser;
+    private SQLiteDatabase db;
+    private HelperDB hlp;
+    private final String[] categories = {"Restaurant", "Recreation", "Shopping", "Transferring money", "Buying online", "Other..."};
+    private Spinner spCategory;
+    private EditText etAmount, etDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expense);
 
+        hlp = new HelperDB(this);
+        db = hlp.getWritableDatabase();
+        db.close();
+
         siCred = new Intent(this, CreditsActivity.class);
         siSearch = new Intent(this, SearchActivity.class);
 
         tvShowDate = findViewById(R.id.tvShowDate);
+        tvInfoToUser = findViewById(R.id.tvInfoToUser);
+        spCategory = findViewById(R.id.spCategory);
+        etAmount = findViewById(R.id.etAmount);
+        etDescription = findViewById(R.id.etDescription);
+
+        ArrayAdapter<String> adp = new ArrayAdapter<String>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, categories);
+        spCategory.setAdapter(adp);
+        spCategory.setOnItemSelectedListener(this);
+    }
+
+    /**
+     * Valid edit text boolean.
+     *
+     * @param str the str
+     * @return true - if valid. else - false
+     */
+    public static boolean validEditText(String str)
+    {
+        String regex = "^[+-]?(\\d+|\\d*\\.\\d+|\\d+\\.)$";
+        return str.matches(regex);
     }
 
     /**
@@ -79,6 +118,7 @@ public class AddExpenseActivity extends AppCompatActivity {
     }
 
     public void openDateDialog(View view) {
+        final Calendar calendar = Calendar.getInstance();
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
@@ -89,12 +129,56 @@ public class AddExpenseActivity extends AppCompatActivity {
 
                 tvShowDate.setText(strDate);
             }
-        }, 2026, 0, 1);
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         dialog.show();
     }
 
     public void addExpense(View view) {
-        //...
-        finish();
+        if (etAmount.getText().toString().isEmpty())
+        {
+            tvInfoToUser.setText("Please enter amount!");
+        }
+        else if (!validEditText(etAmount.getText().toString()))
+        {
+            tvInfoToUser.setText("Invalid number!");
+        }
+        else if (tvShowDate.getText().toString().equals("yyyy-MM-dd"))
+        {
+            tvInfoToUser.setText("Please choose date!");
+        }
+        else if (etDescription.getText().toString().isEmpty())
+        {
+            tvInfoToUser.setText("Please enter description!");
+        }
+        else
+        {
+            tvInfoToUser.setText("");
+            double amount = Double.parseDouble(etAmount.getText().toString());
+            String description = etDescription.getText().toString();
+            String date = tvShowDate.getText().toString();
+
+            ContentValues cv = new ContentValues();
+
+            cv.put(Expenses.AMOUNT, amount);
+            cv.put(Expenses.CATEGORY, strSelectedCategory);
+            cv.put(Expenses.DATE, date);
+            cv.put(Expenses.DESCRIPTION, description);
+
+            db = hlp.getWritableDatabase();
+            db.insert(Expenses.TABLE_EXPENSES, null, cv);
+            db.close();
+
+            finish();
+        }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        strSelectedCategory = categories[i];
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        Log.i("Spinner","Nothing selected");
     }
 }
