@@ -1,5 +1,13 @@
 package com.example.ex11042;
 
+/**
+ * @author David Yusupov <dy3722@bs.amalnet.k12.il>
+ * @version 1.0
+ * @since 28/3/2026
+ * Expense Model Class
+ * <p>
+ * Represents a single expense entity with properties for ID, description, amount, category, and date.
+ */
 public class Expense {
     private int id;
     private String description;
@@ -7,6 +15,14 @@ public class Expense {
     private String category;
     private String date;
 
+    /**
+     * Constructor for creating a new Expense without an ID (e.g., before inserting to DB).
+     *
+     * @param description The description of the expense.
+     * @param amount The monetary amount of the expense.
+     * @param category The category to which the expense belongs.
+     * @param date The date of the expense (format: YYYY-MM-DD).
+     */
     public Expense(String description, double amount, String category, String date) {
         this.description = description;
         this.amount = amount;
@@ -14,6 +30,15 @@ public class Expense {
         this.date = date;
     }
 
+    /**
+     * Constructor for creating an Expense with an ID (e.g., when retrieving from DB).
+     *
+     * @param id The unique database identifier.
+     * @param description The description of the expense.
+     * @param amount The monetary amount of the expense.
+     * @param category The category to which the expense belongs.
+     * @param date The date of the expense (format: YYYY-MM-DD).
+     */
     public Expense(int id, String description, double amount, String category, String date) {
         this.id = id;
         this.description = description;

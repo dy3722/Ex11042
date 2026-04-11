@@ -90,6 +90,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         lvExpenses.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     }
 
+    /**
+     * Called when the activity will start interacting with the user.
+     * <p>
+     * This method clears the current expense list, reads all records from the database,
+     * calculates the total expenses for the current month, and updates the ListView
+     * and the total amount TextView accordingly.
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -212,6 +219,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Called when a context menu for the view is about to be shown.
+     * <p>
+     * This method sets the title of the context menu and adds the "Delete"
+     * and "Edit" options for the long-clicked expense item.
+     *
+     * @param menu The context menu that is being built.
+     * @param v The view for which the context menu is being built.
+     * @param menuInfo Extra information about the item for which the context menu should be shown.
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -221,13 +238,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         menu.add("Edit");
     }
 
+    /**
+     * This hook is called whenever an item in a context menu is selected.
+     * <p>
+     * This method handles the "Delete" and "Edit" actions. If "Delete" is chosen,
+     * it removes the expense from the database. If "Edit" is chosen, it opens an
+     * AlertDialog with a dynamic layout to update the expense details in the database.
+     *
+     * @param item The context menu item that was selected.
+     * @return boolean Return false to allow normal context menu processing to proceed, true to consume it here.
+     */
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         String op = item.getTitle().toString();
         if (op.equals("Delete"))
         {
+            int idToDelete = expensesList.get(clickPos).getId();
+
+            Log.i("SQL_LOG", "Deleting Expense with ID: " + idToDelete);
+
             db = hlp.getWritableDatabase();
-            db.delete(Expenses.TABLE_EXPENSES, Expenses.KEY_ID + "=?", new String[] {Integer.toString(expensesList.get(clickPos).getId())});
+            db.delete(Expenses.TABLE_EXPENSES, Expenses.KEY_ID + "=?", new String[] {Integer.toString(idToDelete)});
             db.close();
 
             onResume();
@@ -364,11 +395,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return false;
     }
 
+    /**
+     * Callback method to be invoked when an item in the Spinner has been selected.
+     * <p>
+     * This method updates the selected category string when the user changes the category
+     * inside the Edit AlertDialog.
+     *
+     * @param adapterView The AdapterView where the selection happened.
+     * @param view The view within the AdapterView that was clicked.
+     * @param i The position of the view in the adapter.
+     * @param l The row id of the item that is selected.
+     */
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         strSelectedCategory = categories[i];
     }
 
+    /**
+     * Callback method to be invoked when the selection disappears from this view.
+     *
+     * @param adapterView The AdapterView that now contains no selected item.
+     */
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
         Log.i("Spinner","Nothing selected");

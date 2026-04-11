@@ -28,6 +28,12 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author David Yusupov <dy3722@bs.amalnet.k12.il>
+ * @version 1.0
+ * @since 28/3/2026
+ * Search Activity
+ */
 public class SearchActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
     private Intent siCred, siAddExpense;
     private SQLiteDatabase db;
@@ -44,6 +50,15 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     private ListView lvSorted;
     private double maxAmount, minAmount;
 
+    /**
+     * Initializes the Search activity.
+     * <p>
+     * This method sets up the UI components, initializes the database helper,
+     * and configures the category filtering spinner with its adapter.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously
+     * being shut down then this Bundle contains the data it most recently supplied.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +85,12 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         spCategoryFilter.setOnItemSelectedListener(this);
     }
 
+    /**
+     * Sorts the filtered expense list by amount in descending order.
+     * <p>
+     * This method uses the Gnome sort algorithm to rearrange the items in the list
+     * based on their monetary value (Amount).
+     */
     public void startToSortExpenseListByAmount()
     {
         int pos = 0;
@@ -89,6 +110,12 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         }
     }
 
+    /**
+     * Sorts the filtered expense list by date in descending order (newest to oldest).
+     * <p>
+     * This method parses the date strings (YYYY-MM-DD) into comparable integers
+     * and uses the Gnome sort algorithm to rearrange the items.
+     */
     private void startToSortExpenseListByDate()
     {
         int pos = 0;
@@ -161,17 +188,41 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Callback method to be invoked when a category in the Spinner has been selected.
+     * <p>
+     * Updates the selected category string and automatically triggers a new search.
+     *
+     * @param adapterView The AdapterView where the selection happened.
+     * @param view The view within the AdapterView that was clicked.
+     * @param i The position of the view in the adapter.
+     * @param l The row id of the item that is selected.
+     */
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         strSelectedCategory = categories[i];
         onSearch(new View(this));
     }
 
+    /**
+     * Callback method to be invoked when the selection disappears from this view.
+     *
+     * @param adapterView The AdapterView that now contains no selected item.
+     */
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
         Log.i("Spinner","Nothing selected");
     }
 
+    /**
+     * Filters, sorts, and displays the expenses based on the user's criteria.
+     * <p>
+     * This method validates the minimum and maximum amount inputs. If valid, it queries
+     * all records from the database, filters them by the specified amount range, category,
+     * and description text. It then applies the chosen sorting method and updates the ListView.
+     *
+     * @param view The view (Button or Spinner) that was clicked to trigger this method.
+     */
     public void onSearch(View view) {
         if (etMaxAmountFilter.getText().toString().isEmpty() || etMinAmountFilter.getText().toString().isEmpty())
         {

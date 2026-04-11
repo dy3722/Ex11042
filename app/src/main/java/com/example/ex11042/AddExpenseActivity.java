@@ -26,6 +26,12 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.util.Calendar;
 
+/**
+ * @author David Yusupov <dy3722@bs.amalnet.k12.il>
+ * @version 1.0
+ * @since 28/3/2026
+ * Add Expense Activity
+ */
 public class AddExpenseActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private Intent siCred, siSearch;
     private String strDate, strSelectedCategory;
@@ -36,6 +42,15 @@ public class AddExpenseActivity extends AppCompatActivity implements AdapterView
     private Spinner spCategory;
     private EditText etAmount, etDescription;
 
+    /**
+     * Initializes the Add Expense activity.
+     * <p>
+     * This method sets up the UI components, initializes the database helper,
+     * and configures the category spinner with its adapter.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously
+     * being shut down then this Bundle contains the data it most recently supplied.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,6 +132,13 @@ public class AddExpenseActivity extends AppCompatActivity implements AdapterView
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Opens a DatePickerDialog to allow the user to select the date of the expense.
+     * <p>
+     * Updates the date TextView with the selected date formatted as YYYY-MM-DD.
+     *
+     * @param view The view (Button/TextView) that was clicked to trigger this method.
+     */
     public void openDateDialog(View view) {
         final Calendar calendar = Calendar.getInstance();
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
@@ -133,6 +155,15 @@ public class AddExpenseActivity extends AppCompatActivity implements AdapterView
         dialog.show();
     }
 
+    /**
+     * Validates user input and inserts the new expense into the database.
+     * <p>
+     * This method checks if all required fields (amount, date, description) are filled
+     * and valid. If valid, it creates a ContentValues object, inserts the new record
+     * into the SQLite database, and finishes the activity. Otherwise, it displays an error.
+     *
+     * @param view The view (Button) that was clicked to trigger this method.
+     */
     public void addExpense(View view) {
         if (etAmount.getText().toString().isEmpty())
         {
@@ -164,6 +195,8 @@ public class AddExpenseActivity extends AppCompatActivity implements AdapterView
             cv.put(Expenses.DATE, date);
             cv.put(Expenses.DESCRIPTION, description);
 
+            Log.i("SQL_LOG", "Inserting Expense: " + cv.toString());
+
             db = hlp.getWritableDatabase();
             db.insert(Expenses.TABLE_EXPENSES, null, cv);
             db.close();
@@ -172,11 +205,24 @@ public class AddExpenseActivity extends AppCompatActivity implements AdapterView
         }
     }
 
+    /**
+     * Callback method to be invoked when a category in the Spinner has been selected.
+     *
+     * @param adapterView The AdapterView where the selection happened.
+     * @param view The view within the AdapterView that was clicked.
+     * @param i The position of the view in the adapter.
+     * @param l The row id of the item that is selected.
+     */
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         strSelectedCategory = categories[i];
     }
 
+    /**
+     * Callback method to be invoked when the selection disappears from this view.
+     *
+     * @param adapterView The AdapterView that now contains no selected item.
+     */
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
         Log.i("Spinner","Nothing selected");

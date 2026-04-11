@@ -1,5 +1,14 @@
 package com.example.ex11042;
 
+/**
+ * @author David Yusupov <dy3722@bs.amalnet.k12.il>
+ * @version 1.0
+ * @since 28/3/2026
+ * Constants Class for Database
+ * <p>
+ * This class contains constant strings representing the database table name and its column names.
+ * Using this class helps prevent typos and makes database queries easier to manage.
+ */
 public class Expenses {
     public static final String TABLE_EXPENSES = "Expenses";
     public static final String KEY_ID = "_id";
